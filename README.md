@@ -23,10 +23,10 @@ GET /{path}?width=500&height=300&format=webp
 
 - **path**: Path to the image (required)
   - For local images: `/your/image/path`
-  - For external URLs: `/http/example.com/image.jpg` (note the `/http` prefix)
+  - For external URLs: `/http://example.com/image.jpg`
 - **width**: Desired width in pixels (optional)
 - **height**: Desired height in pixels (optional)
-- **format**: Output format - one of `webp`, `avif`, `png`, `jpeg` (optional)
+- **format**: Output format - one of `webp`, `png`, `jpeg` (optional)
 
 ### Uploading Images
 
