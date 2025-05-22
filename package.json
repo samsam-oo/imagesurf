@@ -1,0 +1,19 @@
+{
+	"name": "imagesurf",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"deploy": "wrangler deploy",
+		"dev": "wrangler dev",
+		"start": "wrangler dev",
+		"cf-typegen": "wrangler types"
+	},
+	"dependencies": {
+		"@cf-wasm/photon": "^0.1.30",
+		"jose": "^6.0.11"
+	},
+	"devDependencies": {
+		"typescript": "^5.5.2",
+		"wrangler": "^4.16.0"
+	}
+}
