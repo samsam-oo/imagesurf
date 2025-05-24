@@ -43,7 +43,7 @@ export default {
 				return resp({ error: 'No target URL provided' }, 400);
 			}
 
-			if (format && !['avif', 'webp', 'png', 'jpeg'].includes(format)) {
+			if (format && !['svg', 'avif', 'webp', 'png', 'jpeg'].includes(format)) {
 				return resp({ error: 'Invalid format' }, 400);
 			}
 

@@ -5,6 +5,9 @@ function getSize(first?: number, second?: number, third?: number): number {
 	return Math.min(first || Number.MAX_SAFE_INTEGER, second || Number.MAX_SAFE_INTEGER, third || Number.MAX_SAFE_INTEGER);
 }
 
+const aspectRatio = (originalWidth: number, originalHeight: number, width: number): number =>
+	Math.round((originalHeight / originalWidth) * width);
+
 export async function transform(
 	env: Env,
 	datasource: Datasource,
@@ -12,16 +15,23 @@ export async function transform(
 ): Promise<Datasource> {
 	const { width, height, format } = props;
 	if (!width && !height && !format) return datasource;
+	if (format === 'svg') return datasource;
 
 	const bytes = new Uint8Array(datasource.data);
 	let image = PhotonImage.new_from_byteslice(bytes);
 
 	if (height || width) {
-		const maxHeight = Number(env.MAX_HEIGHT) || 10240;
+		const currentWidth = image.get_width();
+		const currentHeight = image.get_height();
+
+		const calcWidth = height && !width ? aspectRatio(currentWidth, currentHeight, height) : width;
+		const calcHeight = width && !height ? aspectRatio(currentWidth, currentHeight, width) : height;
 		const maxWidth = Number(env.MAX_WIDTH) || 10240;
-		const calcHeight = getSize(maxHeight, image.get_height(), height);
-		const calcWidth = getSize(maxWidth, image.get_width(), width);
-		const resizedImage = resize(image, calcWidth, calcHeight, SamplingFilter.Nearest);
+		const maxHeight = Number(env.MAX_HEIGHT) || 10240;
+
+		const finalWidth = getSize(maxWidth, currentWidth, calcWidth);
+		const finalHeight = getSize(maxHeight, currentHeight, calcHeight);
+		const resizedImage = resize(image, finalWidth, finalHeight, SamplingFilter.Nearest);
 
 		image.free();
 		image = resizedImage;
