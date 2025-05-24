@@ -6,7 +6,13 @@ const ignorePath = ['/favicon.ico', '/robots.txt'];
 const resp = (body: any, status: number, headers?: Record<string, string>) =>
 	new Response(JSON.stringify(body), {
 		status,
-		headers: { 'Content-Type': 'application/json', ...headers },
+		headers: {
+			'Content-Type': 'application/json',
+			'Access-Control-Allow-Origin': '*',
+			'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+			'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+			...headers,
+		},
 	});
 
 export default {
@@ -15,6 +21,18 @@ export default {
 		const pathname = decodeURIComponent(url.pathname);
 		if (ignorePath.includes(pathname)) {
 			return new Response(null, { status: 404 });
+		}
+
+		if (req.method === 'OPTIONS') {
+			return new Response(null, {
+				status: 204,
+				headers: {
+					'Access-Control-Allow-Origin': '*',
+					'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+					'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+					'Access-Control-Max-Age': '86400',
+				},
+			});
 		}
 
 		if (req.method === 'GET') {
@@ -35,7 +53,12 @@ export default {
 			const transformed = await transform(env, datasource, { width, height, format });
 			return new Response(transformed.data, {
 				status: 200,
-				headers: { 'Content-Type': transformed.contentType },
+				headers: {
+					'Content-Type': transformed.contentType,
+					'Access-Control-Allow-Origin': '*',
+					'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+					'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+				},
 			});
 		}
 
